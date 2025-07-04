@@ -24,9 +24,18 @@ cc:
 migrate:
 	$(SYMFONY_BIN) doctrine:migrations:migrate
 
+# Commande pour installer les bundles de base
+init-base-bundles:
+	$(EXEC_PHP) composer require symfony/maker-bundle --dev
+	$(EXEC_PHP) composer require symfony/debug-bundle --dev
+	$(EXEC_PHP) composer require symfony/orm-pack
+	$(EXEC_PHP) composer require symfony/twig-bundle
+
+# Executer des commandes dans la console Symfony
+sf-console:
+	$(SYMFONY_BIN) $(filter-out $@,$(MAKECMDGOALS))
+
 # Remet les droits corrects sur Linux
 perms:
-	sudo chown -R $(id -u):$(id -g) symfony
-	@if [ -d symfony/var ]; then sudo chown -R $(id -u):$(id -g) symfony/var; fi
-	@if [ -d symfony/vendor ]; then sudo chown -R $(id -u):$(id -g) symfony/vendor; fi
+	sudo chown -R $$(id -u):$$(id -g) symfony symfony/var symfony/vendor
 
